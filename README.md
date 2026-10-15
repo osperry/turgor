@@ -1,3 +1,3 @@
-# Turgor · Jornada de Mentoria
+# Turgor · inteligência de estresse da soja
 
-Static site served by GitHub Pages from the repository root. Imagery in `assets/` is illustrative.
+Static site served by GitHub Pages from the repository root. Charts come from the October 2026 startup report; field and stress-map imagery is illustrative.
