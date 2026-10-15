@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Turgor · soybean stress intelligence</title>
+<meta name="description" content="A soybean drought and heat stress index, built from satellite data and plant physiology, for those who finance and insure the crop.">
+<meta property="og:title" content="Turgor · soybean stress intelligence">
+<meta property="og:description" content="See the soybean loss before harvest.">
+<meta property="og:image" content="../assets/fields.jpg">
+<meta name="theme-color" content="#0A1810">
+<link rel="alternate" hreflang="pt-BR" href="https://osperry.github.io/turgor/">
+<link rel="alternate" hreflang="en" href="https://osperry.github.io/turgor/en/">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&amp;family=Outfit:wght@500;600;700;800&amp;family=Figtree:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A1810}
+a{color:#C5E15C}a:hover{color:#FFFFFF}
+@keyframes t-drift{from{transform:scale(1.08) translate(0,0)}to{transform:scale(1.2) translate(-3%,-2%)}}
+.t-drift{animation:t-drift 40s ease-in-out infinite alternate;transform-origin:center}
+@keyframes t-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.t-marquee{animation:t-marquee 32s linear infinite}
+@keyframes t-scan{from{top:0%}to{top:100%}}
+.t-scan{animation:t-scan 5s ease-in-out infinite alternate}
+@keyframes t-sweep{from{left:-2%}to{left:102%}}
+.t-sweep{animation:t-sweep 9s linear infinite}
+@keyframes t-pulse{0%{transform:scale(1);opacity:.85}100%{transform:scale(3.2);opacity:0}}
+.t-pulse{animation:t-pulse 2.2s ease-out infinite}
+.t-btn{transition:transform .2s ease,background-color .2s ease,color .2s ease}
+.t-btn:hover{transform:translateY(-2px)}
+.t-feat .t-desc{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .45s ease,opacity .35s ease}
+.t-feat .t-desc>div{overflow:hidden;min-height:0}
+.t-feat:hover .t-desc,.t-feat:focus-within .t-desc,.t-feat .t-desc.t-open{grid-template-rows:1fr;opacity:1}
+.t-feat .t-num{transition:color .3s ease}
+.t-feat:hover .t-num,.t-feat:focus-within .t-num,.t-feat.t-on .t-num{color:#C5E15C !important}
+.t-feat .t-plus{transition:transform .35s ease,background-color .3s ease}
+.t-feat:hover .t-plus,.t-feat.t-on .t-plus{transform:rotate(45deg);background-color:#13291B}
+.t-feat button:focus-visible{outline:3px solid #C5E15C;outline-offset:6px}
+.t-range{-webkit-appearance:none;appearance:none;background:transparent;margin:0;cursor:ew-resize}
+.t-range::-webkit-slider-thumb{-webkit-appearance:none;width:44px;height:100%;background:transparent}
+.t-range::-moz-range-thumb{width:44px;height:100%;background:transparent;border:0}
+.t-range:focus-visible{outline:3px solid #C5E15C;outline-offset:-3px}
+@supports (animation-timeline: view()){
+@keyframes t-reveal{from{opacity:0;transform:translateY(48px)}to{opacity:1;transform:none}}
+.t-reveal{animation:t-reveal linear both;animation-timeline:view();animation-range:entry 0% cover 28%}
+}
+@media (prefers-reduced-motion: reduce){.t-drift,.t-marquee,.t-scan,.t-pulse,.t-reveal,.t-sweep{animation:none !important}.t-sweep{display:none}}
+</style>
+<style>html{scroll-behavior:smooth}img{max-width:100%}</style>
+</head>
+<body>
+<div style="background: #0A1810; color: #F2F5EF; font-family: 'Figtree', system-ui, sans-serif; font-size: 18px; line-height: 1.55; min-height: 100vh; overflow-x: hidden">
+
+<section style="position: relative; min-height: 780px; overflow: hidden; display: flex; flex-direction: column">
+<div class="t-drift" style="position: absolute; inset: 0">
+<img src="../assets/fields.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+<div style="position: absolute; inset: 0; background: rgba(7, 18, 11, 0.62)"></div>
+<img src="../assets/hero-lidar.png" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+</div>
+<div class="t-sweep" style="position: absolute; top: 0; bottom: 0; width: 2px; background: #C5E15C; box-shadow: 0 0 24px 6px rgba(197, 225, 92, 0.45); opacity: 0.7"></div>
+
+<header style="position: relative; max-width: 1280px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px">
+<img src="../assets/logo-hi-light.png" alt="Turgor, crop stress intelligence" style="height: 48px; width: auto; display: block">
+<nav aria-label="Sections" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 28px; font-weight: 500; font-size: 16px">
+<a href="#e-como" style="text-decoration: none; color: #F2F5EF; padding: 10px 0">How it works</a>
+<a href="#e-resultados" style="text-decoration: none; color: #F2F5EF; padding: 10px 0">Results</a>
+<a href="#e-clientes" style="text-decoration: none; color: #F2F5EF; padding: 10px 0">Who it's for</a>
+<a href="#e-piloto" style="text-decoration: none; color: #F2F5EF; padding: 10px 0">Pilot</a>
+<a href="../" lang="pt-BR" hreflang="pt-BR" aria-label="Versão em português" style="text-decoration: none; color: #F2F5EF; padding: 8px 14px; border: 1.5px solid #F2F5EF; border-radius: 999px; font-size: 14px; font-weight: 600; letter-spacing: 0.06em">PT</a>
+</nav>
+</header>
+
+<div style="position: relative; flex: 1; max-width: 1280px; width: 100%; box-sizing: border-box; margin: 0 auto; padding: 140px 24px 64px; display: flex; flex-wrap: wrap; align-items: stretch; gap: 56px 24px">
+<h1 style="flex: 999 1 620px; align-self: flex-end; margin: 0; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: clamp(46px, 6.6vw, 96px); line-height: 0.98; letter-spacing: -0.035em; color: #FFFFFF; max-width: 12ch; text-shadow: 0 2px 30px rgba(0, 0, 0, 0.45)">See the soybean loss before harvest.</h1>
+<div aria-hidden="true" style="flex: 1 1 180px"></div>
+<div style="flex: 0 0 auto; align-self: flex-end; display: flex; justify-content: flex-end">
+<a class="t-btn" href="#e-como" style="display: flex; align-items: center; gap: 12px; text-decoration: none; background: #C5E15C; color: #0A1810; font-weight: 600; font-size: 17px; padding: 16px 26px; border-radius: 999px; white-space: nowrap">See the index<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1810" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M6 13l6 6 6-6"></path></svg></a>
+</div>
+</div>
+</section>
+
+<section aria-label="Public data" style="border-top: 1px solid #23402D; border-bottom: 1px solid #23402D; background: #0D1E14; display: flex; align-items: center; overflow: hidden">
+<span style="flex: none; padding: 22px 24px; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #A9BBAE; background: #0D1E14; position: relative; z-index: 1; border-right: 1px solid #23402D">Public data</span>
+<div style="overflow: hidden; flex: 1; min-width: 0">
+<div class="t-marquee" style="display: flex; width: max-content; gap: 56px; padding: 22px 28px; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 22px; color: #D7E2DA; white-space: nowrap">
+<span>MODIS</span><span style="color: #C5E15C">/</span><span>Sentinel-2</span><span style="color: #C5E15C">/</span><span>NASA POWER</span><span style="color: #C5E15C">/</span><span>IBGE · PAM</span><span style="color: #C5E15C">/</span><span>Emater-RS</span><span style="color: #C5E15C">/</span><span>Rio Grande do Sul</span><span style="color: #C5E15C">/</span><span>Paraná</span><span style="color: #C5E15C">/</span>
+<span>MODIS</span><span style="color: #C5E15C">/</span><span>Sentinel-2</span><span style="color: #C5E15C">/</span><span>NASA POWER</span><span style="color: #C5E15C">/</span><span>IBGE · PAM</span><span style="color: #C5E15C">/</span><span>Emater-RS</span><span style="color: #C5E15C">/</span><span>Rio Grande do Sul</span><span style="color: #C5E15C">/</span><span>Paraná</span><span style="color: #C5E15C">/</span>
+</div>
+</div>
+</section>
+
+<section style="max-width: 1280px; margin: 0 auto; padding: 112px 24px 96px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0; border-top: 1px solid #23402D">
+
+<div class="t-reveal" style="padding: 32px 28px 32px 0; display: flex; flex-direction: column; gap: 14px; border-bottom: 1px solid #23402D">
+<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C5E15C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M7 15l4-4 3 3 5-6"></path></svg>
+<span style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(52px, 5vw, 72px); line-height: 1">17,342</span>
+<span style="color: #A9BBAE; font-size: 17px">municipal harvests validated in Rio Grande do Sul and Paraná, 2001 to 2023</span>
+</div>
+
+<div class="t-reveal" style="padding: 32px 28px 32px 0; display: flex; flex-direction: column; gap: 14px; border-bottom: 1px solid #23402D">
+<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C5E15C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="17" r="1.5"></circle><circle cx="10" cy="13" r="1.5"></circle><circle cx="14" cy="10" r="1.5"></circle><circle cx="18" cy="6" r="1.5"></circle><path d="M4 20L20 4"></path></svg>
+<span style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(52px, 5vw, 72px); line-height: 1">0.88</span>
+<span style="color: #A9BBAE; font-size: 17px">correlation with state yield, against 0.68 for a rainfall index</span>
+</div>
+
+<div class="t-reveal" style="padding: 32px 28px 32px 0; display: flex; flex-direction: column; gap: 14px; border-bottom: 1px solid #23402D">
+<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C5E15C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22V11"></path><path d="M12 11C12 6 8 3 4 3c0 5 3 8 8 8z"></path><path d="M12 14c0-4 3-7 8-7 0 4-3 7-8 7z"></path></svg>
+<span style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(52px, 5vw, 72px); line-height: 1">3×</span>
+<span style="color: #A9BBAE; font-size: 17px">the weight given to stress at flowering and grain fill</span>
+</div>
+
+<div class="t-reveal" style="padding: 32px 28px 32px 0; display: flex; flex-direction: column; gap: 14px; border-bottom: 1px solid #23402D">
+<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C5E15C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8"></rect><rect x="13" y="3" width="8" height="8"></rect><rect x="3" y="13" width="8" height="8"></rect><rect x="13" y="13" width="8" height="8"></rect></svg>
+<span style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(52px, 5vw, 72px); line-height: 1">12–61%</span>
+<span style="color: #A9BBAE; font-size: 17px">loss gap between neighbouring fields in the 2021/22 drought</span>
+</div>
+
+</div>
+</section>
+
+<section style="max-width: 1280px; margin: 0 auto; padding: 48px 24px 120px; display: flex; flex-wrap: wrap; gap: 32px 64px; align-items: flex-start">
+<svg class="t-reveal" width="120" height="120" viewBox="0 0 120 120" aria-hidden="true" style="flex: none"><path d="M20 110 L60 10 L76 10 L36 110 Z" fill="#C5E15C"></path><path d="M60 110 L100 10 L116 10 L76 110 Z" fill="#3E9A5C"></path></svg>
+<div class="t-reveal" style="flex: 1 1 560px; display: flex; flex-direction: column; gap: 28px">
+<p style="margin: 0; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: clamp(30px, 3.8vw, 52px); line-height: 1.12; letter-spacing: -0.015em">In 2021/22, soybean yield in Rio Grande do Sul fell 43% below trend. Those who financed the crop found out at harvest.</p>
+<p style="margin: 0; font-size: 19px; color: #A9BBAE; max-width: 52ch">Meanwhile, subsidised crop insurance shrank from 14 million insured hectares in 2021 to 3.2 million in 2025. The risk now sits with cooperatives, input resellers and banks.</p>
+</div>
+</section>
+
+<section id="e-como" style="background: #F2F5EF; color: #0A1810">
+<div style="max-width: 1280px; margin: 0 auto; padding: 112px 24px; display: flex; flex-direction: column; gap: 56px">
+<h2 class="t-reveal" style="margin: 0; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(34px, 4.4vw, 60px); line-height: 1.04; letter-spacing: -0.02em; max-width: 16ch">The stress that matters is the stress that hits at flowering.</h2>
+
+<div style="display: flex; flex-wrap: wrap; align-items: stretch; gap: 24px">
+
+<article class="t-reveal" style="flex: 1 1 340px; background: #FFFFFF; border-radius: 28px; padding: 40px; display: flex; flex-direction: column; gap: 24px; border: 1px solid #D9E2D6">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<span style="font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #2F7D4F">Satellite</span>
+<span style="background: #E4EFE6; color: #1C5A3A; border-radius: 999px; padding: 4px 12px; font-size: 14px; font-weight: 600">MODIS · Sentinel-2</span>
+</div>
+<h3 style="margin: 0; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 28px; line-height: 1.15">Reads each field's crop calendar</h3>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-left: 2px solid #B9D8C1; margin-left: 15px">
+<li style="display: flex; align-items: center; gap: 16px; padding: 10px 0; margin-left: -17px"><span style="flex: none; width: 32px; height: 32px; border-radius: 50%; background: #1C5A3A; color: #FFFFFF; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center">1</span><span style="font-weight: 500">Emergence</span></li>
+<li style="display: flex; align-items: center; gap: 16px; padding: 10px 0; margin-left: -17px"><span style="flex: none; width: 32px; height: 32px; border-radius: 50%; background: #1C5A3A; color: #FFFFFF; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center">2</span><span style="font-weight: 500">Flowering</span></li>
+<li style="display: flex; align-items: center; gap: 16px; padding: 10px 0; margin-left: -17px"><span style="flex: none; width: 32px; height: 32px; border-radius: 50%; background: #1C5A3A; color: #FFFFFF; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center">3</span><span style="font-weight: 500">Grain fill</span></li>
+</ol>
+<p style="margin: 0; color: #4A5A4F; font-size: 17px">Dates come from each season's NDVI curve, not from a fixed calendar.</p>
+</article>
+
+<div class="t-reveal" style="flex: 0 1 180px; display: flex; align-items: center; justify-content: center; padding: 16px 0">
+<div style="position: relative; width: 168px; height: 168px; border-radius: 50%; background: #0A1810; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center">
+<span class="t-pulse" style="position: absolute; inset: 0; border-radius: 50%; border: 2px solid #3E9A5C"></span>
+<svg width="34" height="41" viewBox="0 0 100 120" aria-hidden="true"><path d="M50 4 A46 56 0 0 0 50 116 Q30 60 50 4 Z" fill="#1E5C3A"></path><path d="M50 4 A46 56 0 0 1 50 116 Q70 60 50 4 Z" fill="#3E9A5C"></path><path d="M50 44 C50 44 41 57 41 64 A9 9 0 0 0 59 64 C59 57 50 44 50 44 Z" fill="#5FA0E6"></path></svg>
+<span style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 30px; color: #FFFFFF; line-height: 1">×3</span>
+<span style="font-size: 12px; color: #B9C9BD; line-height: 1.2; padding: 0 18px">flowering and grain fill</span>
+</div>
+</div>
+
+<article class="t-reveal" style="flex: 1 1 340px; background: #FFFFFF; border-radius: 28px; padding: 40px; display: flex; flex-direction: column; gap: 24px; border: 1px solid #D9E2D6">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<span style="font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #2B6FB8">Daily weather</span>
+<span style="background: #E3EDF8; color: #1F5A96; border-radius: 999px; padding: 4px 12px; font-size: 14px; font-weight: 600">NASA POWER</span>
+</div>
+<h3 style="margin: 0; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 28px; line-height: 1.15">Measures stress within each stage</h3>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-left: 2px solid #B7CDE8; margin-left: 15px">
+<li style="display: flex; align-items: center; gap: 16px; padding: 10px 0; margin-left: -17px"><span style="flex: none; width: 32px; height: 32px; border-radius: 50%; background: #1F5A96; color: #FFFFFF; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center">1</span><span style="font-weight: 500">Water deficit</span></li>
+<li style="display: flex; align-items: center; gap: 16px; padding: 10px 0; margin-left: -17px"><span style="flex: none; width: 32px; height: 32px; border-radius: 50%; background: #1F5A96; color: #FFFFFF; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center">2</span><span style="font-weight: 500">Extreme heat</span></li>
+<li style="display: flex; align-items: center; gap: 16px; padding: 10px 0; margin-left: -17px"><span style="flex: none; width: 32px; height: 32px; border-radius: 50%; background: #1F5A96; color: #FFFFFF; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center">3</span><span style="font-weight: 500">Dry air</span></li>
+</ol>
+<p style="margin: 0; color: #4A5A4F; font-size: 17px">Heat with water available counts for little. Heat in a drought counts for a lot.</p>
+</article>
+
+</div>
+
+<div class="t-reveal" style="background: #0A1810; color: #F2F5EF; border-radius: 28px; padding: 36px 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 40px">
+<p style="margin: 0; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.25; max-width: 30ch">Risk score and estimated loss, per municipality and per field.</p>
+<span style="font-size: 16px; color: #A9BBAE">Web dashboard or API · no sensors · no field visits</span>
+</div>
+</div>
+</section>
+
+<section id="e-resultados" style="max-width: 1280px; margin: 0 auto; padding: 128px 24px 112px; display: flex; flex-direction: column; gap: 48px">
+<h2 class="t-reveal" style="margin: 0; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: clamp(36px, 4.6vw, 64px); line-height: 1; letter-spacing: -0.03em">Rain is not loss.</h2>
+<div class="t-reveal" style="overflow-x: auto">
+<table style="width: 100%; min-width: 620px; border-collapse: collapse; font-size: 18px">
+<thead>
+<tr style="border-bottom: 8px solid #F2F5EF">
+<th scope="col" style="text-align: left; padding: 0 16px 18px 0; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #A9BBAE">Seasons 2001–2023</th>
+<th scope="col" style="text-align: right; padding: 0 16px 18px; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #E2783A">Rainfall index</th>
+<th scope="col" style="text-align: right; padding: 0 0 18px 16px; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #C5E15C">Turgor</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom: 1px solid #23402D">
+<th scope="row" style="text-align: left; font-weight: 500; padding: 22px 16px 22px 0">Correlation with state yield</th>
+<td style="text-align: right; padding: 22px 16px; font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: 40px; color: #A9BBAE">0.68</td>
+<td style="text-align: right; padding: 22px 0 22px 16px; font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: 40px; color: #FFFFFF">0.88</td>
+</tr>
+<tr style="border-bottom: 1px solid #23402D">
+<th scope="row" style="text-align: left; font-weight: 500; padding: 22px 16px 22px 0">Detection of losses above 10% per municipality (AUC)</th>
+<td style="text-align: right; padding: 22px 16px; font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: 40px; color: #A9BBAE">0.78</td>
+<td style="text-align: right; padding: 22px 0 22px 16px; font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: 40px; color: #FFFFFF">0.83</td>
+</tr>
+<tr style="border-bottom: 1px solid #23402D">
+<th scope="row" style="text-align: left; font-weight: 500; padding: 22px 16px 22px 0">Real losses missed, used as an insurance trigger (RS + PR)</th>
+<td style="text-align: right; padding: 22px 16px; font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: 40px; color: #A9BBAE">44%</td>
+<td style="text-align: right; padding: 22px 0 22px 16px; font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: 40px; color: #FFFFFF">37%</td>
+</tr>
+<tr style="border-bottom: 8px solid #F2F5EF">
+<th scope="row" style="text-align: left; font-weight: 500; padding: 22px 16px 22px 0">Real losses missed in Paraná</th>
+<td style="text-align: right; padding: 22px 16px; font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: 40px; color: #A9BBAE">60%</td>
+<td style="text-align: right; padding: 22px 0 22px 16px; font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: 40px; color: #FFFFFF">46%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="t-reveal" style="margin: 0; display: flex; flex-direction: column; gap: 14px">
+<div style="background: #FFFFFF; border-radius: 24px; padding: clamp(12px, 2vw, 28px)">
+<img src="../assets/fig-validation-en.png" alt="Bar charts: correlation with state yield and real losses missed, by index, for Rio Grande do Sul, Paraná and both states. The full Turgor index has the highest correlation and the fewest missed losses." style="width: 100%; height: auto; display: block">
+</div>
+<figcaption style="font-size: 16px; color: #A9BBAE">17,342 municipal harvests in Rio Grande do Sul and Paraná, compared with IBGE yield data. The weights come from soybean physiology, not from fitting the data. <a href="https://github.com/Fortirer/soy-stress-index">Code and data on GitHub</a></figcaption>
+</figure>
+</section>
+
+<section id="e-lavoura" style="background: #06100A; border-top: 1px solid #23402D; border-bottom: 1px solid #23402D">
+<div style="max-width: 1280px; margin: 0 auto; padding: 112px 24px; display: flex; flex-direction: column; gap: 48px">
+<div class="t-reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 48px">
+<h2 style="margin: 0; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(34px, 4.4vw, 60px); line-height: 1.04; letter-spacing: -0.02em; max-width: 14ch">A municipality is not a field.</h2>
+<p style="margin: 0; color: #A9BBAE">Drag the line.</p>
+</div>
+
+<div class="t-reveal" style="position: relative; border-radius: 28px; overflow: hidden; aspect-ratio: 1600 / 933; border: 1px solid #23402D; background: #06100A">
+<img src="../assets/compare-natural.jpg" alt="Illustrative aerial image of soybean fields" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block">
+<img src="../assets/stress-map.jpg" alt="Illustrative stress map of the same fields, from green to orange" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; clip-path: inset(0 0 0 var(--pos, 50%))">
+<div style="position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 2px; margin-left: -1px; background: #F2F5EF; box-shadow: 0 0 16px rgba(0, 0, 0, 0.5); pointer-events: none"></div>
+<div style="position: absolute; top: 50%; left: var(--pos, 50%); width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%; background: #F2F5EF; color: #0A1810; display: flex; align-items: center; justify-content: center; pointer-events: none; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35)">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0A1810" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l-6 6 6 6"></path><path d="M15 6l6 6-6 6"></path></svg>
+</div>
+<span style="position: absolute; left: 16px; top: 16px; background: rgba(10, 24, 16, 0.82); border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 600; color: #F2F5EF; pointer-events: none">Field</span>
+<span style="position: absolute; right: 16px; top: 16px; background: rgba(10, 24, 16, 0.82); border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 600; color: #F2F5EF; pointer-events: none">Stress index</span>
+<input class="t-range" type="range" min="0" max="100" step="1" value="50" aria-label="Compare the field with the stress index" style="position: absolute; inset: 0; width: 100%; height: 100%">
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 32px">
+<div style="display: flex; align-items: center; gap: 14px; font-size: 14px; color: #A9BBAE">
+<span>No stress</span>
+<span aria-hidden="true" style="width: 220px; height: 10px; border-radius: 999px; background: linear-gradient(90deg, #1E7846, #D6D246, #E2783A); display: block"></span>
+<span>High stress</span>
+</div>
+<span style="font-size: 13px; color: #7E9384">Illustrative map</span>
+</div>
+
+<figure class="t-reveal" style="margin: 0; display: flex; flex-direction: column; gap: 14px">
+<div style="background: #FFFFFF; border-radius: 24px; padding: clamp(12px, 2vw, 28px)">
+<img src="../assets/fig-ndvi-piloto.png" alt="NDVI curves for five plots per municipality in Dom Pedrito, Cruz Alta and Tupanciretã: the 2020/21 season in grey and the 2021/22 drought in orange. Drought damage varies from field to field." style="width: 100%; height: auto; display: block">
+</div>
+<figcaption style="font-size: 16px; color: #A9BBAE">Sentinel-2 pilot: 15 plots of about 35 ha in three municipalities of Rio Grande do Sul. In the 2021/22 drought, neighbouring fields lost between 12% and 61%. A municipal index cannot see that difference. Chart labels in Portuguese.</figcaption>
+</figure>
+</div>
+</section>
+
+<section id="e-clientes" style="max-width: 1280px; margin: 0 auto; padding: 128px 24px 112px; display: flex; flex-direction: column; gap: 56px">
+<h2 class="t-reveal" style="margin: 0; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: clamp(36px, 4.6vw, 64px); line-height: 1; letter-spacing: -0.03em">Who pays for the drought</h2>
+<div style="display: flex; flex-direction: column; border-bottom: 8px solid #F2F5EF">
+
+<article class="t-feat" style="border-top: 8px solid #F2F5EF">
+<h3 style="margin: 0">
+<button type="button" aria-expanded="false" aria-controls="feat-1" style="width: 100%; background: none; border: 0; margin: 0; color: #F2F5EF; cursor: pointer; text-align: left; padding: 28px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 40px; font: inherit">
+<span class="t-num" style="flex: 0 0 clamp(110px, 14vw, 200px); font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: clamp(84px, 11vw, 160px); line-height: 0.8; color: #4E7A5C">01</span>
+<span style="flex: 1 1 300px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(28px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -0.02em">Farm and credit cooperatives</span>
+<span class="t-plus" aria-hidden="true" style="flex: none; width: 52px; height: 52px; border: 2px solid #F2F5EF; border-radius: 50%; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2F5EF" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></span>
+</button>
+</h3>
+<div id="feat-1" class="t-desc"><div><p style="margin: 0; padding: 0 0 40px clamp(0px, calc(14vw + 40px), 240px); font-size: clamp(19px, 1.8vw, 24px); line-height: 1.45; color: #C9D6CC; max-width: 46ch">Scores and alerts during the season for those who approve input loans and barter deals. The loss shows up in time to renegotiate or set aside provisions.</p></div></div>
+</article>
+
+<article class="t-feat" style="border-top: 8px solid #F2F5EF">
+<h3 style="margin: 0">
+<button type="button" aria-expanded="false" aria-controls="feat-2" style="width: 100%; background: none; border: 0; margin: 0; color: #F2F5EF; cursor: pointer; text-align: left; padding: 28px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 40px; font: inherit">
+<span class="t-num" style="flex: 0 0 clamp(110px, 14vw, 200px); font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: clamp(84px, 11vw, 160px); line-height: 0.8; color: #4E7A5C">02</span>
+<span style="flex: 1 1 300px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(28px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -0.02em">Input resellers</span>
+<span class="t-plus" aria-hidden="true" style="flex: none; width: 52px; height: 52px; border: 2px solid #F2F5EF; border-radius: 50%; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2F5EF" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></span>
+</button>
+</h3>
+<div id="feat-2" class="t-desc"><div><p style="margin: 0; padding: 0 0 40px clamp(0px, calc(14vw + 40px), 240px); font-size: clamp(19px, 1.8vw, 24px); line-height: 1.45; color: #C9D6CC; max-width: 46ch">Those who finance growers see the risk on every field in the book, not just the municipal average.</p></div></div>
+</article>
+
+<article class="t-feat" style="border-top: 8px solid #F2F5EF">
+<h3 style="margin: 0">
+<button type="button" aria-expanded="false" aria-controls="feat-3" style="width: 100%; background: none; border: 0; margin: 0; color: #F2F5EF; cursor: pointer; text-align: left; padding: 28px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 40px; font: inherit">
+<span class="t-num" style="flex: 0 0 clamp(110px, 14vw, 200px); font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: clamp(84px, 11vw, 160px); line-height: 0.8; color: #4E7A5C">03</span>
+<span style="flex: 1 1 300px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(28px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -0.02em">Insurers and insurtechs</span>
+<span class="t-plus" aria-hidden="true" style="flex: none; width: 52px; height: 52px; border: 2px solid #F2F5EF; border-radius: 50%; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2F5EF" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></span>
+</button>
+</h3>
+<div id="feat-3" class="t-desc"><div><p style="margin: 0; padding: 0 0 40px clamp(0px, calc(14vw + 40px), 240px); font-size: clamp(19px, 1.8vw, 24px); line-height: 1.45; color: #C9D6CC; max-width: 46ch">The index as a parametric insurance trigger. It pays out when the crop loses yield, not just when rainfall is low.</p></div></div>
+</article>
+
+<article class="t-feat" style="border-top: 8px solid #F2F5EF">
+<h3 style="margin: 0">
+<button type="button" aria-expanded="false" aria-controls="feat-4" style="width: 100%; background: none; border: 0; margin: 0; color: #F2F5EF; cursor: pointer; text-align: left; padding: 28px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 40px; font: inherit">
+<span class="t-num" style="flex: 0 0 clamp(110px, 14vw, 200px); font-family: 'Big Shoulders Display', 'Outfit', sans-serif; font-weight: 800; font-size: clamp(84px, 11vw, 160px); line-height: 0.8; color: #4E7A5C">04</span>
+<span style="flex: 1 1 300px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(28px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -0.02em">Banks with farm lending</span>
+<span class="t-plus" aria-hidden="true" style="flex: none; width: 52px; height: 52px; border: 2px solid #F2F5EF; border-radius: 50%; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2F5EF" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></span>
+</button>
+</h3>
+<div id="feat-4" class="t-desc"><div><p style="margin: 0; padding: 0 0 40px clamp(0px, calc(14vw + 40px), 240px); font-size: clamp(19px, 1.8vw, 24px); line-height: 1.45; color: #C9D6CC; max-width: 46ch">Portfolio studies by municipality and by field, on the same measure used in the current season.</p></div></div>
+</article>
+
+</div>
+</section>
+
+<section id="e-piloto" style="max-width: 1280px; margin: 0 auto; padding: 48px 24px 128px; display: flex; flex-wrap: wrap; align-items: center; gap: 48px 64px">
+<div class="t-reveal" style="flex: 1 1 520px; position: relative; border-radius: 28px; overflow: hidden; aspect-ratio: 1600 / 933; border: 1px solid #23402D">
+<img src="../assets/stress-map.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block">
+<div class="t-scan" style="position: absolute; left: 0; right: 0; height: 2px; background: #F2F5EF; box-shadow: 0 0 18px 4px rgba(242, 245, 239, 0.55)"></div>
+<span style="position: absolute; left: 24%; top: 56%; width: 14px; height: 14px; margin: -7px 0 0 -7px; display: block">
+<span class="t-pulse" style="position: absolute; inset: 0; border-radius: 50%; background: #FFFFFF"></span>
+<span style="position: absolute; inset: 0; border-radius: 50%; background: #FFFFFF; border: 3px solid #E2783A; box-sizing: border-box"></span>
+</span>
+<span style="position: absolute; left: 7%; top: 70%; width: 14px; height: 14px; margin: -7px 0 0 -7px; display: block">
+<span class="t-pulse" style="position: absolute; inset: 0; border-radius: 50%; background: #FFFFFF"></span>
+<span style="position: absolute; inset: 0; border-radius: 50%; background: #FFFFFF; border: 3px solid #E2783A; box-sizing: border-box"></span>
+</span>
+</div>
+<div class="t-reveal" style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 32px">
+<h2 style="margin: 0; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(34px, 4vw, 54px); line-height: 1.05; letter-spacing: -0.02em">We are looking for a cooperative in southern Brazil for the pilot.</h2>
+<p style="margin: 0; color: #C9D6CC; font-size: 19px">Field boundaries and harvest history. Turgor runs the index season by season and compares it with what was harvested.</p>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #23402D">
+<div style="padding: 22px 0; border-bottom: 1px solid #23402D; display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 21px; line-height: 1.25">We are also looking for partners</h3>
+<p style="margin: 0; color: #A9BBAE; font-size: 17px">One in technology, for data and satellite work. One in business, with a track record in farm credit or crop insurance.</p>
+</div>
+</div></div>
+</section>
+
+<section id="e-equipe" style="border-top: 1px solid #23402D">
+<div style="max-width: 1280px; margin: 0 auto; padding: 96px 24px; display: flex; flex-wrap: wrap; gap: 32px 64px; align-items: flex-start">
+<span class="t-reveal" style="flex: 0 0 220px; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #A9BBAE; padding-top: 10px">Team</span>
+<div class="t-reveal" style="flex: 1 1 560px; display: flex; flex-direction: column; gap: 16px">
+<p style="margin: 0; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.1; letter-spacing: -0.015em">Janaina Fortirer</p>
+<p style="margin: 0; font-size: 17px; color: #C5E15C; font-weight: 600">Founder and scientific lead</p>
+<p style="margin: 0; color: #C9D6CC; max-width: 60ch">Plant ecophysiologist, PhD candidate at the University of São Paulo and visiting researcher at the University of Illinois Urbana-Champaign. She studies how soybean responds to elevated CO2, drought and warming, from gas exchange to transcriptomics.</p>
+</div>
+</div>
+</section>
+
+<footer style="background: #06100A; border-top: 1px solid #23402D">
+<div style="max-width: 1280px; margin: 0 auto; padding: 72px 24px 40px; display: flex; flex-direction: column; gap: 56px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px 64px">
+<div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 16px">
+<img src="../assets/logo-hi-light.png" alt="Turgor, crop stress intelligence" style="height: 52px; width: auto; display: block; align-self: flex-start">
+</div>
+<nav aria-label="Footer" style="flex: 0 1 200px; display: flex; flex-direction: column; gap: 6px; font-size: 16px">
+<span style="font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #A9BBAE; padding-bottom: 6px">Turgor</span>
+<a href="#e-como" style="text-decoration: none; color: #F2F5EF; padding: 6px 0">How it works</a>
+<a href="#e-resultados" style="text-decoration: none; color: #F2F5EF; padding: 6px 0">Results</a>
+<a href="#e-clientes" style="text-decoration: none; color: #F2F5EF; padding: 6px 0">Who it's for</a>
+<a href="#e-piloto" style="text-decoration: none; color: #F2F5EF; padding: 6px 0">Pilot</a>
+</nav>
+<div style="flex: 0 1 240px; display: flex; flex-direction: column; gap: 6px; font-size: 16px">
+<span style="font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #A9BBAE; padding-bottom: 6px">Code</span>
+<a href="https://github.com/Fortirer/soy-stress-index" style="text-decoration: none; color: #F2F5EF; padding: 6px 0">Code on GitHub</a>
+</div>
+</div>
+<div style="border-top: 1px solid #23402D; padding-top: 24px; font-size: 14px; color: #A9BBAE">Turgor · soybean stress intelligence · Sources: IBGE (PAM), Emater-RS, FGV-Agro, NASA (MODIS, POWER), ESA (Sentinel-2)</div>
+</div>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // compare slider
+  var range = document.querySelector('.t-range');
+  if (range) {
+    var box = range.parentElement, touched = false, t0 = performance.now();
+    var set = function (v) { box.style.setProperty('--pos', v + '%'); range.value = v; };
+    var stop = function () { touched = true; };
+    range.addEventListener('input', function () { stop(); set(range.value); });
+    ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { range.addEventListener(ev, stop, { passive: true }); });
+    set(50);
+    if (!reduce) {
+      var tick = function (now) {
+        if (touched) return;
+        set(Math.round(50 + 32 * Math.sin((now - t0) / 1000 * 0.7)));
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+  }
+  // feature index: progressive disclosure on click / tap
+  var feats = Array.prototype.slice.call(document.querySelectorAll('.t-feat'));
+  feats.forEach(function (art) {
+    var btn = art.querySelector('button');
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') !== 'true';
+      feats.forEach(function (a) {
+        a.classList.remove('t-on');
+        a.querySelector('button').setAttribute('aria-expanded', 'false');
+        a.querySelector('.t-desc').classList.remove('t-open');
+      });
+      if (open) {
+        art.classList.add('t-on');
+        btn.setAttribute('aria-expanded', 'true');
+        art.querySelector('.t-desc').classList.add('t-open');
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
